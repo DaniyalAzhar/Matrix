@@ -1,0 +1,60 @@
+package lab1;
+import java.io.*;
+public class Lab1 {
+    int m,r,c;
+    public String[][][] matrice = new String[m][r][c]; //m is the number of matrices with r rows and c columns.
+    
+    /*
+    The createMatrix function performs the function of taking the information from the main and
+    turn in into an array of matrices which can later be performed functions on like addition and subtraction.
+    */
+    void createMatrix(Lab1 obj,String m[],int numOfMatrices,int numOfRows,int numOfColumns){
+        String[] rows = new String[numOfRows];
+        String[] cols = new String[numOfColumns];
+        //String[][][] mat =new String[2][2][2];
+        for(int x=0;x<numOfMatrices;x++){
+            System.out.println("m:"+m[x]);
+            rows = m[x].split(" ");
+            for(int y=0;y<numOfRows;y++){
+                cols = rows[y].split(",");
+                for(int z=0;z<numOfColumns;z++){
+                    System.out.println("c:"+cols[z]);
+                    obj.matrice[x][y][z]=cols[z];//matrice[][][] is public
+                }
+            }
+        }
+    }
+/*
+    Main function reads in the file and extracts the lines as strings. The predicts the number of matrices,
+    number of rows and number of columns. Then sets the dimensions in the matrice array of the Lab1 object.
+    Then it passes some information into the createMatrix function which initializes all the matrices from the
+    information in the file. These matrices can then later be used for the different functions to be performed
+    on them.
+    */
+    public static void main(String[] args) throws IOException{
+        File file = new File("file.txt");
+        BufferedReader buffer = new BufferedReader(new FileReader(file));
+        Lab1 obj = new Lab1();
+        String s;
+        int i=0,numOfMatrices,numOfRows,numOfColumns;
+        try {
+            while((s=buffer.readLine()) != null){
+                numOfMatrices = s.length() - s.replace(";", "").length(); //count the number of ";" ,which differentiate two matrices, in the file.
+                obj.m=numOfMatrices;//number of matrices given in file
+                String[] matrix = new String[numOfMatrices];
+                String[] temp = new String[numOfMatrices];
+                matrix = s.split(";"); //split matrices
+                System.out.println(matrix);
+                numOfRows = matrix[0].length() - matrix[0].replace(" ", "").length();//count the number of white spaces in the file which differentiate two rows.
+                obj.r=numOfRows+1;//number of rows in a matrix given in file
+                temp = matrix[0].split(" "); //split rows
+                numOfColumns = temp[0].length() - temp[0].replace(",", "").length();//count the number of "," in the file which differentiate two columns in a row.
+                obj.c=numOfColumns+1; //number of columns in a matrix given in file
+                obj.createMatrix(obj,matrix,numOfMatrices,numOfRows+1,numOfColumns+1);
+            }
+            //System.out.println(obj.matrice[0][0][0]);
+        }finally {
+            buffer.close(); //close stream
+        }
+    }  
+}
